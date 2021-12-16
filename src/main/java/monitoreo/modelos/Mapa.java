@@ -43,12 +43,15 @@ public class Mapa implements IMapa {
 
         // latitude, longitude, scale
         //Viewpoint viewpoint = new Viewpoint(27.3805833, 33.6321389, 6E3);
+        
+        /* 
         this.coordenadaXInicial = -12.05847;
         this.coordenadaYInicial = -77.08654;
-        Viewpoint viewpoint = new Viewpoint(this.coordenadaXInicial, this.coordenadaYInicial, 12000);   // UNMSM-2
+        Viewpoint viewpoint = new Viewpoint(this.coordenadaXInicial, this.coordenadaYInicial, 12000);   // UNMSM-2 
+        */
 
         // take 5 seconds to move to viewpoint
-        final ListenableFuture<Boolean> viewpointSetFuture = mapView.setViewpointAsync(viewpoint, 5);
+        final ListenableFuture<Boolean> viewpointSetFuture = mapView.setViewpointAsync(proxy.setViewPoint(), 5);
         viewpointSetFuture.addDoneListener(() -> {
             try {
                 boolean completed = viewpointSetFuture.get();

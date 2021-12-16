@@ -2,6 +2,7 @@ package monitoreo.modelos.impl;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 
 import monitoreo.modelos.interfaces.IMapaBase;
 
@@ -31,6 +32,15 @@ public class MapaBaseProxy implements IMapaBase {
         }
 
         return map;
+    }
+    
+    public Viewpoint setViewPoint() {
+        double coordenadaXInicial = -12.05847;
+        double coordenadaYInicial = -77.08654;
+        
+        Viewpoint viewpoint = new Viewpoint(coordenadaXInicial, coordenadaYInicial, 12000);   // UNMSM-2
+        
+        return viewpoint;
     }
     
 }
