@@ -68,6 +68,10 @@ public class Ventana extends Application {
         guiaGeneral.agregarEntrega(guia);
         guiaGeneral.agregarEntrega(new EntregaProgramada("13:00-14:00", "24/11/2021"));
         guiaGeneral.agregarEntrega(new EntregaProgramada("15:00-16:00", "24/11/2021"));
+        
+        // Crear una entrega reprogramada a partir de la primera entrega: guiaGeneral[0]
+        guiaGeneral.agregarEntrega(new EntregaReprogramada(guia.getEntregas().get(0), "09:00-10:00", "02/12/2021"));
+        
         guiaGeneral.listarEntrega();
 
         System.out.println("[Cliente][Guia General] Costo total "+guiaGeneral.calcularCosto());
