@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import monitoreo.modelos.impl.*;
 import monitoreo.modelos.interfaces.ITipoServicio;
 
+
 //import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
@@ -24,11 +25,13 @@ public class Ventana extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        
         // Crea una fachada par el Mapa
         FachadaMapa facade = new FachadaMapa(stage);
         //facade.getMapaBase().imprimeCoordenadasActual();
         this.mapa = facade.getMapa();
+        
+        FachadaPregunta2 fachada2 = new FachadaPregunta2(stage);
 
         // Crea la imagen para el botón
         Image img = new Image("https://upload-icon.s3.us-east-2.amazonaws.com/uploads/icons/png/4498062351543238871-512.png");
@@ -54,39 +57,49 @@ public class Ventana extends Application {
         PuntoMonitoreoBuilder puntoBuilder = new PuntoMonitoreoBuilder("Inicio del día");
         puntoBuilder.withSimbolo(SimpleMarkerSymbol.Style.DIAMOND, 0xFF00FF00, 10);
         puntoBuilder.withUbicacion(-12.05310, -77.08552);
-        Punto puntoInicial = puntoBuilder.build();
-        facade.addGraphicsOverlay(puntoInicial.getGrafico());
+       // Punto puntoInicial = puntoBuilder.build();
+        fachada2.CrearPuntoInicial(puntoBuilder);
+        facade.addGraphicsOverlay(fachada2.getPuntoInicial().getGrafico());
 
         // Entregas programadas para una misma ruta
-        GuiaEntrega guia = new GuiaEntrega();
-        guia.agregarEntrega(new EntregaProgramada("09:00-10:00", "23/11/2021"));
-        guia.agregarEntrega(new EntregaProgramada("10:00-11:00", "23/11/2021"));
-        guia.agregarEntrega(new EntregaProgramada("12:00-13:00", "23/11/2021"));
+        //GuiaEntrega guia = new GuiaEntrega();
+        //guia.agregarEntrega(new EntregaProgramada("10:00-11:00", "23/11/2021"));
+        //guia.agregarEntrega(new EntregaProgramada("12:00-13:00", "23/11/2021"));
+        fachada2.agregarEntregas("09:00-10:00", "23/11/2021");
+        fachada2.agregarEntregas("10:00-11:00", "23/11/2021");
+        fachada2.agregarEntregas("12:00-13:00", "23/11/2021");
+  
         //guia.listarEntrega();
 
-        GuiaEntrega guiaGeneral = new GuiaEntrega();
-        guiaGeneral.agregarEntrega(guia);
-        guiaGeneral.agregarEntrega(new EntregaProgramada("13:00-14:00", "24/11/2021"));
-        guiaGeneral.agregarEntrega(new EntregaProgramada("15:00-16:00", "24/11/2021"));
+        //GuiaEntrega guiaGeneral = new GuiaEntrega();
+        //guiaGeneral.agregarEntrega(guia);
+        //guiaGeneral.agregarEntrega(new EntregaProgramada("13:00-14:00", "24/11/2021"));
+        //guiaGeneral.agregarEntrega(new EntregaProgramada("15:00-16:00", "24/11/2021"));
+        fachada2.agregarEntregas("13:00-14:00", "24/11/2021");
+        fachada2.agregarEntregas("15:00-16:00", "24/11/2021");
         
-        // Crear una entrega reprogramada a partir de la primera entrega: guiaGeneral[0]
-        guiaGeneral.agregarEntrega(new EntregaReprogramada(guia.getEntregas().get(0), "09:00-10:00", "02/12/2021"));
-        
-        guiaGeneral.listarEntrega();
 
-        System.out.println("[Cliente][Guia General] Costo total "+guiaGeneral.calcularCosto());
+
+        // Crear una entrega reprogramada a partir de la primera entrega: guiaGeneral[0]
+        //fachada2.getGuia().agregarEntrega(new EntregaReprogramada(guia.getEntregas().get(0), "09:00-10:00", "02/12/2021"));
+        
+        fachada2.getGuia().listarEntrega();
+
+        System.out.println("[Cliente][Guia General] Costo total "+fachada2.getGuia().calcularCosto());
 
         // Crear ruta con entrega y recojo
-        ITipoServicio recojo = new RecojoTipoServicio();
-        ITipoServicio entrega = new EntregaTipoServicio();
+       // ITipoServicio recojo = new RecojoTipoServicio();
+        //ITipoServicio entrega = new EntregaTipoServicio();
 
-        Punto puntoRecojo = new Punto(recojo, -12.054901, -77.085470);
-        facade.addGraphicsOverlay(puntoRecojo.getGrafico());
-        puntoRecojo.ejecutarServicio();
+        //Punto puntoRecojo = new Punto(recojo, -12.054901, -77.085470);
+        fachada2.CrearPuntoRecojo( -12.054901, -77.085470);
+        facade.addGraphicsOverlay(fachada2.getPuntoRecojo().getGrafico());
+        fachada2.getPuntoRecojo().ejecutarServicio();
 
-        Punto puntoEntrega = new Punto(entrega,-12.072936, -77.083132);
-        facade.addGraphicsOverlay(puntoEntrega.getGrafico());
-        puntoEntrega.ejecutarServicio();
+        //Punto puntoEntrega = new Punto(entrega,-12.072936, -77.083132);
+        fachada2.CrearPuntoRecojo(-12.072936, -77.083132);
+        facade.addGraphicsOverlay(fachada2.getpuntoEntrega().getGrafico());
+        fachada2.getpuntoEntrega().ejecutarServicio();
         
         // Agrega la ruta entre los puntos
         Double[][] puntosEntrega = {
@@ -99,8 +112,9 @@ public class Ventana extends Application {
                 {-12.06759, -77.08168},
                 {-12.07293, -77.08313}
         };
-        PoliLinea poliEntrega = new PoliLinea(entrega, puntosEntrega);
-        facade.addGraphicsOverlay(poliEntrega.getGrafico());
+        //PoliLinea poliEntrega = new PoliLinea(entrega, puntosEntrega);
+        fachada2.agregarPolilinea(puntosEntrega);
+        facade.addGraphicsOverlay(fachada2.getPolilinea().getGrafico());
 
         // Dibuja el mapa en la ventana
         facade.stackAddMapView();

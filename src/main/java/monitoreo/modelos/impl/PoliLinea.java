@@ -15,7 +15,7 @@ public class PoliLinea implements IGrafico {
     private Graphic poligono;
 
     private static final SpatialReference SPATIAL_REFERENCE = SpatialReferences.getWgs84();
-
+    
     public PoliLinea(ITipoServicio tipoServicio, Double[][] puntos) {
 
         this.tipoServicio = tipoServicio;
